@@ -21,8 +21,10 @@
 // BONUS: Add another (nested) layout route that adds the <EventNavigation> component above all /events... page components
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import HomePage from "./pages/Home";
-import EventsPage, {loader as eventsLoader} from "./pages/Events";
-import EventDetailPage, {loader as eventDetailLoader} from "./pages/EventDetail";
+import EventsPage, { loader as eventsLoader } from "./pages/Events";
+import EventDetailPage, {
+  loader as eventDetailLoader,
+} from "./pages/EventDetail";
 import NewEventPage from "./pages/NewEvent";
 import EditEventPage from "./pages/EditEvent";
 import RouteLayout from "./pages/Root";
@@ -33,7 +35,7 @@ const myRouter = createBrowserRouter([
   {
     path: "/",
     element: <RouteLayout></RouteLayout>,
-    errorElement: <ErrorPage></ErrorPage> ,
+    errorElement: <ErrorPage></ErrorPage>,
     children: [
       { index: true, element: <HomePage></HomePage> },
       {
@@ -43,18 +45,24 @@ const myRouter = createBrowserRouter([
           {
             index: true,
             element: <EventsPage></EventsPage>,
-            loader: eventsLoader // loader function is triggered and executed just before the jsx code runs
+            loader: eventsLoader, // loader function is triggered and executed just before the jsx code runs
           },
           {
             path: ":eventId",
-            element: <EventDetailPage></EventDetailPage>,
-            loader: eventDetailLoader
+            id: 'event-detail',
+            loader: eventDetailLoader,
+            children: [
+              {
+                index: true,
+                element: <EventDetailPage></EventDetailPage>,
+              },
+              {
+                path: "edit",
+                element: <EditEventPage></EditEventPage>,
+              },
+            ],
           },
           { path: "new", element: <NewEventPage></NewEventPage> },
-          {
-            path: ":eventId/edit",
-            element: <EditEventPage></EditEventPage>,
-          },
         ],
       },
     ],
