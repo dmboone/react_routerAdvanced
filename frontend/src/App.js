@@ -38,7 +38,20 @@ const myRouter = createBrowserRouter([
         path: "events",
         element: <EventsRootLayout></EventsRootLayout>,
         children: [
-          {index: true, element: <EventsPage></EventsPage> },
+          {
+            index: true,
+            element: <EventsPage></EventsPage>,
+            loader: async () => {
+              // loader function is triggered and executed just before the jsx code runs
+              const response = await fetch("http://localhost:8080/events");
+
+              if (!response.ok) {
+              } else {
+                const resData = await response.json();
+                return resData.events; // whatever returned in loader will be made available for that page and any other components where you need it
+              }
+            },
+          },
           {
             path: ":eventId",
             element: <EventDetailPage></EventDetailPage>,
